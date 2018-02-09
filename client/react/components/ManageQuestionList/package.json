@@ -1,0 +1,5 @@
+{
+  "private": true,
+  "name": "ManageQuestionList",
+  "main": "./ManageQuestionList.js"
+}

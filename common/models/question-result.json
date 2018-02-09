@@ -1,0 +1,32 @@
+{
+  "name": "questionResult",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "scores": {
+      "type": [
+        "object"
+      ],
+      "required": true
+    },
+    "questionID": {
+      "type": "string",
+      "required": true
+    },
+    "date": {
+      "type": "date",
+      "required": true
+    },
+    "createdDate": {
+      "type": "date",
+      "default": "$now"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

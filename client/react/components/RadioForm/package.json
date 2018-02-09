@@ -1,0 +1,5 @@
+{
+  "private": true,
+  "name": "RadioForm",
+  "main": "./RadioForm.js"
+}

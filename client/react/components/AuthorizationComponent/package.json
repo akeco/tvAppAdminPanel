@@ -1,0 +1,5 @@
+{
+  "private": true,
+  "name": "AuthorizationComponent",
+  "main": "./AuthorizationComponent.js"
+}
