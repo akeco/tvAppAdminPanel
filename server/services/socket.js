@@ -21,7 +21,7 @@ module.exports = (server, client, clientSub) => {
     }).on('error', function () {
         console.log('Redis SUB error');
     }).on('message', (channel, message) => {
-        if(channel === "send-result"){
+        if(channel === "send-result" && message){
             console.info("GOT RESULTS", message);
             createScoreResult(message);
         }
@@ -36,7 +36,16 @@ module.exports = (server, client, clientSub) => {
         });
 
         socket.on("create-question-files", (questionSize)=>{
-            createFiles(questionSize);
+            if(questionSize){
+                createFiles(questionSize);
+                client.publish("set-question-limit-number", questionSize);
+            }
+        });
+
+        socket.on("send-question-limit", (questionSize)=>{
+            if(questionSize){
+                client.publish("set-question-limit-number", questionSize);
+            }
         });
 
         socket.on("reset-question-files", ()=>{

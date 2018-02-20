@@ -27,7 +27,7 @@ class ActivateQuestionList extends Component{
     }
 
     componentDidMount(){
-        const {questions, currentDate, addQuestion} = this.props;
+        const {questions, currentDate, addQuestion, socket} = this.props;
 
         if(!questions.length){
             const getForDate = currentDate.format('l');
@@ -36,6 +36,7 @@ class ActivateQuestionList extends Component{
                 .then((response)=>{
                     if(response.status == 200){
                         addQuestion(response.data);
+                        socket.emit("send-question-limit", response.data.length);
                     }
                 }).catch((error)=>{
                 console.info("ERROR",error);

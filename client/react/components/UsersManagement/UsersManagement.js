@@ -41,13 +41,15 @@ class UsersManagement extends Component{
             <Grid>
                 <Paper className={classes.root}>
                     <div>
-                        <p className={classes.title}>User management</p>
                         <ul className={classes.list}>
                             {
                                 users.map((item)=>{
                                     return(
                                         <li className={classes.li}>
-                                            <p>{item.username}</p>
+                                            {
+                                                item.avatarURL && <img src={item.avatarURL} className={classes.avatar} />
+                                            }
+                                            <p className={classes.username}>{item.username}</p>
                                             <Button
                                                 raised
                                                 color="primary"
@@ -83,6 +85,12 @@ const styles = theme => ({
         marginLeft: 'auto',
         height: '100%'
     },
+    avatar: {
+        width: 100,
+        height: 100,
+        borderRadius: 3,
+        objectFit: 'cover'
+    },
     leftIcon: {
         marginRight: theme.spacing.unit,
     },
@@ -103,6 +111,11 @@ const styles = theme => ({
         padding: 15,
         color: 'white',
         textTransform: 'uppercase'
+    },
+    username: {
+        alignSelf: 'flex-start',
+        marginTop: 0,
+        marginLeft: 20
     }
 });
 

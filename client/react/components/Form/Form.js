@@ -10,7 +10,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {
     addQuestion,
-    addCurrentDate
+    addCurrentDate,
+    changeActiveQuestion
 } from '../../redux/actions/index'
 import CheckIcon from 'material-ui-icons/Check';
 import RadioForm from '../RadioForm';
@@ -121,13 +122,14 @@ class Form extends Component{
 
 
     handleDateChange = (date) => {
-        const {addCurrentDate, addQuestion, socket} = this.props;
+        const {addCurrentDate, addQuestion, socket, changeActiveQuestion} = this.props;
         addCurrentDate(date);
         axios.get(`${document.location,origin}/api/questions?filter[where][date]=${date.format('l')}`)
             .then((response)=>{
                 console.info("RESPONSE",response);
                 if(response.status == 200){
                     addQuestion(response.data);
+                    changeActiveQuestion(0);
                     socket.emit("create-question-files", response.data.length);
                 }
             }).catch((error)=>{
@@ -351,7 +353,8 @@ const styles = theme => ({
 const matchDispatchToProps = (dispatcher) => {
     return bindActionCreators({
         addQuestion,
-        addCurrentDate
+        addCurrentDate,
+        changeActiveQuestion
     }, dispatcher);
 };
 
