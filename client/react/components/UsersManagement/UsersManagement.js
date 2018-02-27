@@ -19,7 +19,7 @@ class UsersManagement extends Component{
     }
 
     componentDidMount(){
-        axios.get("http://localhost:3000/api/UserModels?filter=[WHERE][emailVerified]=false").then((response)=>{
+        axios.get(`http://localhost:3000/api/UserModels?filter={"where":{"temporaryAvatarURL":{"neq": null}}}`).then((response)=>{
             if(response.status == 200){
                 console.info("FETCH USERS", response);
                 if(response.data && response.data.length){
@@ -33,6 +33,22 @@ class UsersManagement extends Component{
         })
     }
 
+    approveImage = (id, imgURL) => {
+        axios.patch(`http://localhost:3000/api/UserModels/${id}`, {
+            temporaryAvatarURL: null,
+            avatarURL: imgURL
+        }).then((response)=>{
+            if(response.status == 200){
+                this.setState({
+                    users: this.state.users.filter((item)=>{item.id != id})
+                });
+                console.info("IMAGE SUCCESSFULY APPROVED");
+            }
+        }).catch((error)=>{
+            console.info("APPROVE IMAGE ERROR", error);
+        });
+    };
+
     render(){
         const {classes} = this.props;
         const {users} = this.state;
@@ -43,11 +59,11 @@ class UsersManagement extends Component{
                     <div>
                         <ul className={classes.list}>
                             {
-                                users.map((item)=>{
+                                users.length && users.map((item)=>{
                                     return(
                                         <li className={classes.li}>
                                             {
-                                                item.avatarURL && <img src={item.avatarURL} className={classes.avatar} />
+                                                item.temporaryAvatarURL && <img src={item.temporaryAvatarURL} className={classes.avatar} />
                                             }
                                             <p className={classes.username}>{item.username}</p>
                                             <Button
@@ -55,7 +71,7 @@ class UsersManagement extends Component{
                                                 color="primary"
                                                 className={classes.button}
                                                 onClick={()=>{
-                                                    //this.handleAction(index, item);
+                                                    this.approveImage(item.id, item.temporaryAvatarURL);
                                                 }}
                                             >
                                                 <CheckIcon className={classes.leftIcon} />
@@ -63,7 +79,7 @@ class UsersManagement extends Component{
                                             </Button>
                                         </li>
                                     )
-                                })
+                                }) || <p>Nema trenutno usera za odobrenje</p>
                             }
                         </ul>
                     </div>

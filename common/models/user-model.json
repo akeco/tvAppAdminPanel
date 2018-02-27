@@ -23,7 +23,8 @@
       "required": true
     },
     "avatarURL": {
-      "type": "string"
+      "type": "string",
+      "dafault": null
     },
     "emailToken": {
       "type": "string"
@@ -31,6 +32,10 @@
     "jokers": {
       "type": "number",
       "default": 1
+    },
+    "temporaryAvatarURL": {
+      "type": "string",
+      "dafault": null
     }
   },
   "validations": [],

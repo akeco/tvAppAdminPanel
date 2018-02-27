@@ -92548,6 +92548,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var _ref = _jsx('p', {}, void 0, 'Nema trenutno usera za odobrenje');
+
 var UsersManagement = function (_Component) {
     _inherits(UsersManagement, _Component);
 
@@ -92555,6 +92557,24 @@ var UsersManagement = function (_Component) {
         _classCallCheck(this, UsersManagement);
 
         var _this = _possibleConstructorReturn(this, (UsersManagement.__proto__ || Object.getPrototypeOf(UsersManagement)).call(this, props));
+
+        _this.approveImage = function (id, imgURL) {
+            _axios2.default.patch('http://localhost:3000/api/UserModels/' + id, {
+                temporaryAvatarURL: null,
+                avatarURL: imgURL
+            }).then(function (response) {
+                if (response.status == 200) {
+                    _this.setState({
+                        users: _this.state.users.filter(function (item) {
+                            item.id != id;
+                        })
+                    });
+                    console.info("IMAGE SUCCESSFULY APPROVED");
+                }
+            }).catch(function (error) {
+                console.info("APPROVE IMAGE ERROR", error);
+            });
+        };
 
         _this.state = {
             users: []
@@ -92567,7 +92587,7 @@ var UsersManagement = function (_Component) {
         value: function componentDidMount() {
             var _this2 = this;
 
-            _axios2.default.get("http://localhost:3000/api/UserModels?filter=[WHERE][emailVerified]=false").then(function (response) {
+            _axios2.default.get('http://localhost:3000/api/UserModels?filter={"where":{"temporaryAvatarURL":{"neq": null}}}').then(function (response) {
                 if (response.status == 200) {
                     console.info("FETCH USERS", response);
                     if (response.data && response.data.length) {
@@ -92583,6 +92603,8 @@ var UsersManagement = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
+            var _this3 = this;
+
             var classes = this.props.classes;
             var users = this.state.users;
 
@@ -92591,11 +92613,11 @@ var UsersManagement = function (_Component) {
                 className: classes.root
             }, void 0, _jsx('div', {}, void 0, _jsx('ul', {
                 className: classes.list
-            }, void 0, users.map(function (item) {
+            }, void 0, users.length && users.map(function (item) {
                 return _jsx('li', {
                     className: classes.li
-                }, void 0, item.avatarURL && _jsx('img', {
-                    src: item.avatarURL,
+                }, void 0, item.temporaryAvatarURL && _jsx('img', {
+                    src: item.temporaryAvatarURL,
                     className: classes.avatar
                 }), _jsx('p', {
                     className: classes.username
@@ -92604,12 +92626,12 @@ var UsersManagement = function (_Component) {
                     color: 'primary',
                     className: classes.button,
                     onClick: function onClick() {
-                        //this.handleAction(index, item);
+                        _this3.approveImage(item.id, item.temporaryAvatarURL);
                     }
                 }, void 0, _jsx(_Check2.default, {
                     className: classes.leftIcon
                 }), 'Odobri'));
-            })))));
+            }) || _ref))));
         }
     }]);
 

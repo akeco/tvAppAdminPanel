@@ -2,7 +2,9 @@
 const nodemailer = require('nodemailer');
 const randomstring = require("randomstring");
 
-const rndToken = randomstring.generate();
+const rndToken = randomstring.generate({
+    length: 50
+});
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -15,15 +17,13 @@ var mailOptions = {
     from: process.env.EMAIL,
     to: process.env.SEND_TO,
     subject: 'Sending Email using Node.js',
-    text: "http://localhost:3000/verifyemail/"+rndToken
+    text: "http://localhost:8086/email-validation/"+rndToken
 };
 
 module.exports = function(Usermodel) {
-    Usermodel.observe('before save', function(ctx, next) {
-        if (ctx.instance) {
-            ctx.instance.emailToken = rndToken;
-            console.log('Saved %s#%s', ctx.Model.modelName, ctx.instance.id, ctx.instance.email);
-            /*
+    Usermodel.beforeRemote('create', function(ctx, modelInstance, next) {
+        if (ctx && ctx.req && ctx.req.body) {
+            ctx.req.body.emailToken = rndToken;
             transporter.sendMail(mailOptions, function(error, info){
                 if (error) {
                     console.log(error);
@@ -31,11 +31,6 @@ module.exports = function(Usermodel) {
                     console.log('Email sent: ' + info.response);
                 }
             });
-            */
-        } else {
-            console.log('Updated %s matching %j',
-                ctx.Model.pluralModelName,
-                ctx.where);
         }
         next();
     });
