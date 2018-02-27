@@ -8,11 +8,7 @@ var mode = process.env.NODE_ENV || env.DEVELOPMENT;
 //var webpackHotMiddleware = require('webpack-hot-middleware');
 //var config = require(`../webpack.config.${mode}`);
 //var compiler = webpack(config);
-const redis = require('redis');
-require('dotenv').config();
 
-const client = redis.createClient(process.env.REDISPORT, process.env.REDISHOST, {no_ready_check: true});
-const clientSub = redis.createClient(process.env.REDISPORT, process.env.REDISHOST, {no_ready_check: true});
 
 if(mode === env.DEVELOPMENT) {
     // only need in development
@@ -36,7 +32,5 @@ app.start = function() {
 };
 
 if (require.main === module) {
-  //app.start();
-    require('./services/socket')(app, client, clientSub);
-    //require('./services/socket')(app);
+  app.start();
 }
