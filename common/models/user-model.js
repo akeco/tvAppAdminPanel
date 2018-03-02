@@ -18,7 +18,7 @@ var mailOptions = {
     from: process.env.EMAIL,
     //to: process.env.SEND_TO,
     subject: 'Sending Email using Node.js',
-    text: "http://localhost:8086/email-validation/"+rndToken
+    text: process.env.HOST+"/email-validation/"+rndToken
 };
 
 module.exports = function(Usermodel) {
