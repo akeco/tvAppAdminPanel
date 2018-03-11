@@ -1,11 +1,18 @@
 'use strict';
 const nodemailer = require('nodemailer');
 const randomstring = require("randomstring");
+const { getRandomIntInclusive } = require("../../services/functions");
 require('dotenv').config();
 
+/*
 const rndToken = randomstring.generate({
     length: 50
 });
+*/
+
+const rndToken = getRandomIntInclusive(1000, 9999);
+
+
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -17,8 +24,9 @@ const transporter = nodemailer.createTransport({
 var mailOptions = {
     from: process.env.EMAIL,
     //to: process.env.SEND_TO,
-    subject: 'Sending Email using Node.js',
-    text: process.env.EMAIL_HOST+"/email-validation/"+rndToken
+    subject: 'Verifikuj QuizApp korisnika',
+    //text: process.env.EMAIL_HOST+"/email-validation/"+rndToken,
+    text: "Unesite sljedeći code u vašu mobilnu aplikaciju: " + rndToken,
 };
 
 module.exports = function(Usermodel) {
